@@ -6,17 +6,9 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Pawn extends Piece{
-    private boolean promotion;
     private Piece newPiece;
     private static final int VALUE = 1;
 
-    public Pawn(boolean isWhite, Position position, boolean promotion) {
-        super(VALUE, isWhite, position);
-        this.promotion = promotion;
-        this.newPiece = null;
-    }
-
-    // have to create this empty constructor
     public Pawn(boolean isWhite, Position position) {
         super(VALUE, isWhite, position);
     }
@@ -31,11 +23,11 @@ public class Pawn extends Piece{
         while (true) {
             try{
                 String userOptionInput = getUserInput(
-                        "Select the desired Piece to promote your Pawn?\n"
-                                + "'Q' -> Queen\n"
-                                + "'R' -> Rook\n"
-                                + "'B' -> Bishop\n"
-                                + "'K' -> Knight"
+                        "Select the desired Piece to promote your Pawn:\n" +
+                                "Q = Queen\n" +
+                                "R = Rook\n" +
+                                "B = Bishop\n" +
+                                "K = Knight"
                 );
 
                 if (Objects.equals(userOptionInput, "Q") || Objects.equals(userOptionInput, "q")){
@@ -76,7 +68,6 @@ public class Pawn extends Piece{
         return "♙";
     }
 
-    // take a look at this method
     @Override
     public boolean move(Position newPosition, Piece[][] board) {
         int newCol = newPosition.getCol();
@@ -91,7 +82,7 @@ public class Pawn extends Piece{
             return true;
         } else {
             System.out.println("Invalid move!");
-            System.out.println("Pawn moves only forward by 1");
+            System.out.println("Pawn moves only forward by 1 or en passant");
             return false;
         }
     }
@@ -107,43 +98,30 @@ public class Pawn extends Piece{
         int newRow = newPosition.getRow();
         int col = this.position.getCol();
         int row = this.position.getRow();
-        Piece p = board[newRow][newCol];
-
-        if (p != null) {
-            if (p.getIsWhite() == this.getIsWhite()) {
+        Piece pawn = board[newRow][newCol];
+        if (pawn != null) {
+            if (pawn.getIsWhite() == this.getIsWhite()) {
                 return false;
             }
         }
-
-        if (p == null) {
+        if (pawn == null) {
             if (this.getIsWhite()) {
-                if (col == newCol && ((newRow == row - 1) || (row == 6 && newRow == row - 2)))
-                {
-                    return true;
-                }
+                return col == newCol && ((newRow == row - 1) || (row == 6 && newRow == row - 2));
             }
             else {
-                if (col == newCol && ((newRow == row + 1) || (row == 1 && newRow == row + 2)))
-                {
-                    return true;
-                }
+                return col == newCol && ((newRow == row + 1) || (row == 1 && newRow == row + 2));
             }
         }
         else {
 
-            boolean b = (newCol == col + 1) || (newCol == col - 1);
+            boolean a = (newCol == col + 1) || (newCol == col - 1);
             if (this.getIsWhite()) {
-                if (newRow == row - 1 && b) {
-                    return true;
-                }
+                return newRow == row - 1 && a;
             }
             else {
-                if (newRow == row + 1 && b) {
-                    return true;
-                }
+                return newRow == row + 1 && a;
             }
 
         }
-        return false;
     }
 }

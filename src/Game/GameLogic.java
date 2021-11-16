@@ -64,24 +64,17 @@ public class GameLogic {
             } else if (userInput.length() == 4 && uci.validate(userInput.substring(0, 2)) && uci.validate(userInput.substring(2, 4))) {
                 if (move(userInput)) {
                     printBoard();
-                    promotionStatus(userInput);
+                    promotionPawn(userInput);
                     isWhiteTurn = !isWhiteTurn;
                 }
-            }
-            else if(kingInCheckWhite()){
-                System.out.println((isWhiteTurn ? "Black" : "White") + " King is in check!");
-            }
-            else if(kingInCheckBlack()){
-                System.out.println((isWhiteTurn ? "Black" : "White") + " King is in check!");
             }
             else {
                 printInvalidInput();
             }
-
         }
     }
 
-    public void promotionStatus(String uci) {
+    public void promotionPawn(String uci) {
         Position to = this.uci.getPositionFromUci(uci.substring(2, 4));
         if (to.getRow() != 0 && to.getRow() != 7) {
             return;
@@ -105,15 +98,15 @@ public class GameLogic {
             winCount++;
             System.out.println(
                     "Game over - " +
-                            winCount + " - " + loseCount +
-                            "White resigned. Black won by resignation"
+                    winCount + "-" + loseCount +
+                    " White resigned. Black won by resignation"
             );
         } else {
             winCount++;
             System.out.println(
                     "Game over - " +
-                            loseCount + " - " + winCount +
-                            "Black resigned. White won by resignation"
+                    loseCount + "-" + winCount +
+                    " Black resigned. White won by resignation"
             );
         }
         System.exit(0);
@@ -230,34 +223,6 @@ public class GameLogic {
         }
 
         return false;
-    }
-
-    public boolean kingInCheckWhite() {
-        King king;
-        for (int i = 7; i >= 0; i--) {
-            for (int j = 0; j < 8; j++) {
-                if (board[i][j] != null) {
-                    if (board[i][j].getValue() == 1000 && board[i][j].getIsWhite() == isWhiteTurn) {
-                        king = (Pieces.King) board[i][j];
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    public boolean kingInCheckBlack() {
-        King king;
-        for (int i = 7; i >= 0; i--) {
-            for (int j = 0; j < 8; j++) {
-                if (board[i][j] != null) {
-                    if (board[i][j].getValue() == 1000 && board[i][j].getIsWhite() == !isWhiteTurn) {
-                        king = (Pieces.King) board[i][j];
-                    }
-                }
-            }
-        }
-        return true;
     }
 
 }
